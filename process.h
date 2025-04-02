@@ -2,31 +2,30 @@
 #define PROCESS_H
 
 #include <stdint.h>
-#include "idt.h"
+#include "signals.h"
 
 // Süreç durumları
-#define PROCESS_STATE_READY    0
-#define PROCESS_STATE_RUNNING  1
-#define PROCESS_STATE_BLOCKED  2
-#define PROCESS_STATE_SLEEPING 3
-#define PROCESS_STATE_ZOMBIE   4
-#define PROCESS_STATE_STOPPED  5
+#define PROCESS_STATE_READY    0   // Çalışmaya hazır
+#define PROCESS_STATE_RUNNING  1   // Çalışıyor
+#define PROCESS_STATE_BLOCKED  2   // Bloklandı
+#define PROCESS_STATE_SLEEPING 3   // Uyuyor
+#define PROCESS_STATE_ZOMBIE   4   // Sonlandı ama kaynakları serbest bırakılmadı
+#define PROCESS_STATE_STOPPED  5   // Durduruldu (SIGSTOP ile)
 
 // Maksimum süreç sayısı
 #define MAX_PROCESSES 64
 
-// Sinyaller için yapılar
-typedef uint64_t sigset_t;
+// Kaydedici durumu
+typedef struct {
+    uint64_t rax, rbx, rcx, rdx;
+    uint64_t rsi, rdi, rbp, rsp;
+    uint64_t r8, r9, r10, r11, r12, r13, r14, r15;
+    uint64_t rip, rflags, cs, ss, ds, es, fs, gs;
+    uint64_t cr3;
+} registers_t;
 
 // Sinyal işleyici fonksiyon türü
 typedef void (*signal_handler_t)(int);
-
-// Sinyal işleyici yapısı
-typedef struct {
-    signal_handler_t handler;  // Sinyal işleyici fonksiyon
-    uint32_t flags;            // Bayraklar
-    uint64_t mask;             // Bloklanacak sinyaller
-} signal_action_t;
 
 // Süreç yapısı
 typedef struct {

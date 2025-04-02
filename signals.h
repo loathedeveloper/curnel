@@ -2,7 +2,10 @@
 #define SIGNALS_H
 
 #include <stdint.h>
-#include "process.h"
+
+// İleri bildirimler (forward declarations)
+struct process_t;
+typedef struct process_t process_t;
 
 // Sinyal numaraları (POSIX uyumlu)
 #define SIGHUP     1   // Hangup
